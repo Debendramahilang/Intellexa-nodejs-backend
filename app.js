@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const express = require('express');
 const apiRoutes = require('./src/routes');
+const apiAuthRoutes = require('./src/routes/auth.router');
 
 const app = express();
 
@@ -14,8 +15,10 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api', apiRoutes);
+app.use('/api/auth', apiAuthRoutes);
 
-const PORT = process.env.PORT || 8000;
+
+const PORT = process.env.PORT;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
