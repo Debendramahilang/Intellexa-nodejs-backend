@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const apiRoutes = require('./src/routes');
 const apiAuthRoutes = require('./src/routes/auth.router');
+const apileadRoutes = require('./src/routes/lead.router');
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.get('/', (req, res) => {
 
 app.use('/api', apiRoutes);
 app.use('/api/auth', apiAuthRoutes);
+app.use('/api/leads', apileadRoutes);
 
 const PORT = process.env.PORT || 8000;
 

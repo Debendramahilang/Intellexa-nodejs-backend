@@ -1,5 +1,6 @@
 const { Sequelize } = require("sequelize");
 require("dotenv").config();
+const mysql = require('mysql2');
 
 // Create Sequelize instance
 const sequelize = new Sequelize(
@@ -24,4 +25,27 @@ const connectDB = async () => {
   }
 };
 
-module.exports = { sequelize, connectDB };
+
+
+
+const pool = mysql.createPool({
+    host:     process.env.DB_HOST,
+    user:     process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
+});
+
+const runQuery = (sql, params = []) => {
+    return new Promise((resolve, reject) => {
+        pool.query(sql, params, (error, results) => {
+            if (error) return reject(error);
+            resolve(results);
+        });
+    });
+};
+
+
+module.exports = { sequelize, connectDB, runQuery };
