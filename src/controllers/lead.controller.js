@@ -3,7 +3,7 @@ const service = require('../services/lead.service');
 const createLead = async (req, res) => {
   try {
     const leadData = req.body; 
-    console.log('leadData ', leadData);
+    // console.log('leadData ', leadData);
      
     const newLead = await service.createLead(req,leadData);
     return res.status(201).json(newLead);
@@ -65,9 +65,9 @@ const deleteLead = async (req, res) => {
         const leadId = req.params.id;
         const deleted = await service.deleteLead(leadId);   
         if (!deleted) {
-            return res.status(404).json({ message: 'Lead not found' });
+            return res.status(404).json({ success: false, message: 'Lead not found' });
         }   
-        return res.json({ message: 'Lead deleted successfully' });
+        return res.json({ success: true,  message: 'Lead deleted successfully' });      
     } catch (error) {
         return res.status(500).json({
             message: 'Error deleting lead', 
