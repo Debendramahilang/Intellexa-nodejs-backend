@@ -17,7 +17,7 @@ const createLead = async (req, res) => {
 
 const getLeads = async (req, res) => {
     try {
-        const leads = await service.getLeads();
+        const leads = await service.getLeads(req);
         return res.json(leads);
     } catch (error) {
         return res.status(500).json({

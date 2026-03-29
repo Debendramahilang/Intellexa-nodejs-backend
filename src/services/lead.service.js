@@ -69,14 +69,18 @@ const createLead = (req, leadData) => {
 };
 
 
-const getLeads = () => {
+const getLeads = (req) => {
     return new Promise((resolve, reject) => {
+        console.log('req ', req.query.status);
+        
+        const statusFilter = req.query.status;
         runQuery(`
             SELECT l.*, GROUP_CONCAT(p.product_name) AS interestedProducts
             FROM tbl_leads l
             LEFT JOIN lead_interested_products p ON l.id = p.lead_id
+            where l.status = ?
             GROUP BY l.id
-        `)
+        `, [statusFilter])
             .then(leads => {
                 const result = leads.map(normalizeLead);
                 resolve(result);
