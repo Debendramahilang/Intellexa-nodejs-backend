@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 const { sequelize } = require('../config/db_connection');
 const { QueryTypes } = require('sequelize');
 
+const ACCESS_TOKEN_EXPIRES_IN = '24h';
+
 const authenticateUser = async (email, password) => {
   const query = `
     SELECT id, name, email, password, is_admin, expiry_date, active_status
@@ -37,19 +39,12 @@ const generateToken = (user) => {
     is_admin: user.is_admin
   };
 
-  const access_token = jwt.sign(payload, process.env.JWT_SECRET, {
-    expiresIn: '24h'
+  const authToken = jwt.sign(payload, process.env.JWT_SECRET, {
+    expiresIn: ACCESS_TOKEN_EXPIRES_IN
   });
 
   return {
-    access_token,
-    token_type: 'bearer',
-    user: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      is_admin: user.is_admin
-    }
+    authToken
   };
 };
 

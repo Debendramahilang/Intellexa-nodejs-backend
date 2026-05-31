@@ -1,5 +1,20 @@
 const AuthService = require('../services/auth.service');
 
+const AUTH_COOKIE_NAME = 'authToken';
+const LEGACY_AUTH_COOKIE_NAME = 'access_token';
+const AUTH_COOKIE_MAX_AGE = 24 * 60 * 60 * 1000;
+const AUTH_COOKIE_OPTIONS = {
+  path: '/',
+  maxAge: AUTH_COOKIE_MAX_AGE,
+  sameSite: 'lax',
+  secure: false
+};
+const CLEAR_AUTH_COOKIE_OPTIONS = {
+  path: '/',
+  sameSite: 'lax',
+  secure: false
+};
+
 // GET /status
 const getStatus = (req, res) => {
   const status = AuthService.buildStatusResponse();
@@ -21,16 +36,11 @@ const login = async (req, res) => {
 
     const tokenData = AuthService.generateToken(user);
 
-    res.cookie('access_token', tokenData.access_token, {
-      httpOnly: true,
-      maxAge: 30 * 60 * 1000,
-      sameSite: 'lax',
-      secure: false
-    });
+    res.clearCookie(LEGACY_AUTH_COOKIE_NAME, CLEAR_AUTH_COOKIE_OPTIONS);
+    res.cookie(AUTH_COOKIE_NAME, tokenData.authToken, AUTH_COOKIE_OPTIONS);
 
     return res.json({
-      ...tokenData,
-      message: 'Login successful. Token set in cookie.'
+      authToken: tokenData.authToken
     });
 
   } catch (error) {
@@ -43,8 +53,13 @@ const login = async (req, res) => {
 
 // POST /logout
 const logout = (req, res) => {
-  res.clearCookie('access_token');
-  return res.json({ message: 'Logged out successfully' });
+  res.clearCookie(AUTH_COOKIE_NAME, CLEAR_AUTH_COOKIE_OPTIONS);
+  res.clearCookie(LEGACY_AUTH_COOKIE_NAME, CLEAR_AUTH_COOKIE_OPTIONS);
+
+  return res.json({
+    success: true,
+    message: 'Logged out successfully'
+  });
 };
 
 // GET /me
