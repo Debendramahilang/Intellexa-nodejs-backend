@@ -6,6 +6,7 @@ const apiRoutes = require('./src/routes');
 const apiAuthRoutes = require('./src/routes/auth.router');
 const apileadRoutes = require('./src/routes/lead.router');
 const apiCustomerRoutes = require('./src/routes/customer.router');
+const apiAgentRoutes = require('./src/routes/agent.router');
 const apiProductRoutes = require('./src/routes/product.router');
 const apiPurchaseRoutes = require('./src/routes/purchase.router');
 
@@ -31,6 +32,7 @@ app.use('/api', apiRoutes);
 app.use('/api/auth', apiAuthRoutes);
 app.use('/api/leads', apileadRoutes);
 app.use('/api/customer', apiCustomerRoutes);
+app.use('/api/agents', apiAgentRoutes);
 app.use('/api/products', apiProductRoutes);
 app.use('/api/purchases', apiPurchaseRoutes);
 
